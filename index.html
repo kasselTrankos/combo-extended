@@ -11,7 +11,12 @@
         padding: 0px;
         visibility: hidden;
         opacity: 0;
-        transition: visibility 0s, opacity 0.5s linear;
+        transition-delay: 3s;
+        -webkit-transition: all .25s ease;
+       -moz-transition: all .25s ease;
+        -ms-transition: all .25s ease;
+         -o-transition: all .25s ease;
+            transition: all .25s ease;
       }
       .combo-extended-ul.show{
         visibility: visible;

@@ -1,0 +1,65 @@
+<html>
+  <template id="nameTagTemplate">
+    <style>
+    .outer {
+      border: 2px solid brown;
+      border-radius: 1em;
+      background: red;
+      font-size: 20pt;
+      width: 12em;
+      height: auto;
+      padding-bottom: 3em;
+      text-align: center;
+    }
+    .boilerplate {
+      color: white;
+      font-family: sans-serif;
+      padding: 0.5em;
+    }
+    .name {
+      color: black;
+      background: white;
+      font-family: "Marker Felt", cursive;
+      font-size: 45pt;
+      padding-top: 0.2em;
+    }
+    </style>
+    <div class="outer">
+      <div class="boilerplate">
+        Hi! My name is
+      </div>
+      <div class="name">
+        <content></content>
+      </div>
+    </div>
+  </template>
+  <script>
+    var _current = document.currentScript.ownerDocument; 
+    console.log(document.currentScript.ownerDocument);
+    class nameBadge extends HTMLElement {
+      constructor() {
+        
+        super();
+      }
+      connectedCallback() {
+        var importDoc = _current.querySelector('[id=nameTagTemplate]');
+        var shadow = this.attachShadow({ mode: "open" });
+        importDoc.content.lastElementChild.getElementsByTagName('content')[0].innerText = this.lastChild.data;
+        shadow.appendChild(importDoc.content.cloneNode(true));
+      }
+    }
+
+    customElements.define("name-badge", nameBadge);
+    // var importDoc = document.currentScript.ownerDocument;
+    // var nameBadgePrototype = Object.create(HTMLElement.prototype);
+    // console.log(importDoc);
+    // nameBadgePrototype.createdCallback = function() {
+    //   var shadow = this.createShadowRoot();
+    //   var template = importDoc.querySelector('[id=nameTagTemplate]');
+    //   shadow.appendChild(template.content.cloneNode(true));
+    // };
+    // document.registerElement("name-badge", {
+    //   prototype: nameBadgePrototype
+    // });
+  </script>
+</html>

@@ -1,7 +1,7 @@
 function comboExtended (elm) {
 	var values = function () {
-		return Array.prototype.slice.call(elm.getElementsByTagName('OPTION')).map(function(el){
-			return {text: el.innerHTML, value: el.value} 
+		return Array.prototype.slice.call(elm.getElementsByTagName('OPTION')).map(function(el, i){
+			return {text: el.innerHTML, value: i} 
 		});
 	};
 	var setProps = function () {
@@ -14,27 +14,46 @@ function comboExtended (elm) {
 		parent.removeChild(elm);
 		return parent;
 	};
-	var addEvents = function ({input, ul}) {
+	var addEvents = function ({input, ul, parent}) {
 		input.addEventListener( 'focus', function(event){
 			ul.className = ul.className + ' show';
 		});
-		input.addEventListener( 'blur', function(event){
+		parent.addEventListener( 'mouseleave', function(event){
 			ul.className = ul.className.split(' ').filter(function(el){
 				return el!=='show'
-			}).join(' ')
+			}).join(' ');
+			input.blur();
+		});
+		ul.addEventListener('click', function(event){
+			input.value = event.target.innerHTML;
+			ul.className = ul.className.split(' ').filter(function(el){
+				return el!=='show'
+			}).join(' ');
+			input.blur();
+			redraw(parent, ul, input);
 		});
 	};
-	var create = function (parent, values, props) {
-		var ul, li, a;
+	var input = function(parent, props) {
 		var input = document.createElement('INPUT');
 		input.className = props.className;
-		
+		parent.appendChild(input);
+		return {parent, input, props};
+	};
+	var redraw = function(parent, ul, input){
+		parent.removeChild(ul);
+		var value = values(); var props = setProps();
+		console.log(value);
+		create({parent, input, props})
+	};
+	var create = function ({parent, input, props}) {
+		var ul, li, a;
+		console.log(values, parent, input, props);
 		var options = function () {
-			
 			ul = document.createElement('UL');
 			ul.className = 'combo-extended-ul row'
-			values.forEach( function(el){ 
+			values().forEach( function(el){ 
 				li = document.createElement('LI');
+				li.value = el.value;
 				a = document.createElement('A');
 				a.innerHTML = el.text;
 				li.className = 'col-md-12'
@@ -42,17 +61,12 @@ function comboExtended (elm) {
 				ul.appendChild(li); 
 			});
 			parent.appendChild(ul);
-			
-		};
-		var append = function(){
-
 		};
 		
-		parent.appendChild(input);
 		options();
-		return {input, ul};
+		return {input, ul, parent};
 	};
-	addEvents(create(replace(), values(), setProps()));
+	addEvents(create(input(replace(), setProps())));
 };
 //IEF
 (function(){

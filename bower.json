@@ -1,0 +1,17 @@
+{
+  "name": "combo-extended",
+  "description": "",
+  "main": "comboExtended.js",
+  "license": "ISC",
+  "homepage": "https://github.com/kasselTrankos/combo-extended",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "webcomponentsjs": "^1.0.19"
+  }
+}
