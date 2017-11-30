@@ -27,6 +27,7 @@ http.createServer(function (req, res) {
     '.eot': 'appliaction/vnd.ms-fontobject',
     '.ttf': 'aplication/font-sfnt'
   };
+  console.log('vvv', pathname)
   fs.exists(pathname, function (exist) {
     if(!exist) {
       var e = exist ? 'it\'s there' : 'no passwd!';
@@ -39,6 +40,7 @@ http.createServer(function (req, res) {
     if (fs.statSync(pathname).isDirectory()) {
       pathname += '/index-1.html';
     }
+    console.log('p', pathname)
     // read file from file system
     fs.readFile(pathname, function(err, data){
       if(err){

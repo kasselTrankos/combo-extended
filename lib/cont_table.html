@@ -1,0 +1,62 @@
+<html>
+  <template id="contTableTemplate">
+    <style>
+    .outer {
+      border: 2px solid brown;
+      border-radius: 1em;
+      background: red;
+      font-family: Arial;
+      font-size: 12pt;
+      width: 12em;
+      height: auto;
+      padding-bottom: 1em;
+      text-align: center;
+      margin: 0.1em;
+      float: left;
+    }
+    .boilerplate {
+      color: white;
+      font-family: sans-serif;
+      padding: 0.5em;
+    }
+    .name {
+      color: black;
+      background: white;
+      font-family: "Marker Felt", cursive;
+      font-size: 16pt;
+      padding-top: 0.1em;
+    }
+    </style>
+    <table>
+    </table>
+  </template>
+  <script>
+    var _current = document.currentScript.ownerDocument; 
+    class nameBadge extends HTMLElement {
+      constructor() {
+        
+        super();
+      }
+      load(url) {
+        console.log(url)
+        var req = new XMLHttpRequest();
+        req.open('GET', url);
+        req.responseType = 'json';
+        req.send();
+        req.onload = function() {
+          if(this.status == 200){
+          console.log(_current, this.response);
+          } else {
+            // something went wrong
+          }
+        }
+      }
+      connectedCallback() {
+        var importDoc = _current.querySelector('[id=nameTagTemplate]');
+        var shadow = this.attachShadow({ mode: "open" });
+        this.load(this.getAttribute('data-load'))
+      }
+    }
+    customElements.define("cont-table", nameBadge);
+  </script>
+</html>
