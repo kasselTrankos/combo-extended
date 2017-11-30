@@ -5,6 +5,7 @@ que es lo que hace falta?
 - head
 
 	1. aqui seria un componente
+	2- ,
 	
 - body
 
