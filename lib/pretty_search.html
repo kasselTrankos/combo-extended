@@ -1,32 +1,29 @@
 <html>
-  <template id="contTableTemplate">
+  <template id="prettySearchTemplate">
     <style>
+      @import "https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.35/css/uikit.min.css";
       .list {
-        position: absolute;
-        top:100px; right: 10px;
-        float: left;
+        /*width: 100px; height: 100px;*/
+        /*position: absolute;*/
+        /*top:100px; right: 10px;*/
+        /*background: red;*/
       }
       h1{
         color: blue;
         font-size: 44px;
       }
-      [from=thead] {
-        background-color: #8b7858;
-        color: white;
-        padding: 8px;
-        float:left;
-        width: 300px;
-      }
     </style>
-    <p>que dices?</p>
-
     <content>
-
-
+      <form class="uk-form-stacked">
+        <div class="uk-margin">
+             <label class="uk-form-label" for="form-stacked-text">Text</label>
+             <div class="uk-form-controls">
+                 <input class="uk-input" id="form-stacked-text" type="text" placeholder="Some text..." />
+             </div>
+         </div>
+      </form>
       <div class="list"><slot name="mioo"></slot></div>
-      <h1><slot name="title"></slot></h1>
     </content>
-
   </template>
   <script>
     var _current = document.currentScript.ownerDocument;
@@ -34,8 +31,9 @@
       constructor() {
         super();
       }
+      blura (e) {
+      }
       load(url) {
-        console.log(url)
         var req = new XMLHttpRequest();
         req.open('GET', url);
         req.responseType = 'json';
@@ -49,14 +47,24 @@
           }
         }
       }
+      addEvents(elm, evt) {
+        console.log(elm, evt);
+        elm.addEventListener(evt, function(e) {
+          console.log(e.target.value)
+        })
+      }
       connectedCallback() {
-        var importDoc = _current.querySelectorAll('template')[0];//_current.getElementById('contTableTemplate')
+        var importDoc = _current.querySelectorAll('template')[0];//_current.getElementById('prettySearchTemplate')
         var shadow = this.attachShadow({ mode: "open" });
         this.load(this.getAttribute('data-load'));
         //importDoc.content.lastElementChild.getElementsByTagName('content')[0].innerText = this.lastChild.data;
+
         shadow.appendChild(importDoc.content.cloneNode(true));
+        console.log(shadow)
+        this.addEvents(shadow.lastElementChild.getElementsByTagName('INPUT')[0], 'input')
+        // shadow.lastElementChild.getElementsByTagName('INPUT')[0].className=
       }
     }
-    customElements.define("cont-table", nameBadge);
+    customElements.define("pretty-search", nameBadge);
   </script>
 </html>
