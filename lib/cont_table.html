@@ -1,40 +1,37 @@
 <html>
   <template id="contTableTemplate">
     <style>
-    .outer {
-      border: 2px solid brown;
-      border-radius: 1em;
-      background: red;
-      font-family: Arial;
-      font-size: 12pt;
-      width: 12em;
-      height: auto;
-      padding-bottom: 1em;
-      text-align: center;
-      margin: 0.1em;
-      float: left;
-    }
-    .boilerplate {
-      color: white;
-      font-family: sans-serif;
-      padding: 0.5em;
-    }
-    .name {
-      color: black;
-      background: white;
-      font-family: "Marker Felt", cursive;
-      font-size: 16pt;
-      padding-top: 0.1em;
-    }
+      .list {
+        position: absolute;
+        top:100px; right: 10px;
+        float: left;
+      }
+      h1{
+        color: blue;
+        font-size: 44px;
+      }
+      [from=thead] {
+        background-color: #8b7858;
+        color: white;
+        padding: 8px;
+        float:left;
+        width: 300px;
+      }
     </style>
-    <table>
-    </table>
+    <p>que dices?</p>
+
+    <content>
+
+
+      <div class="list"><slot name="mioo"></slot></div>
+      <h1><slot name="title"></slot></h1>
+    </content>
+
   </template>
   <script>
-    var _current = document.currentScript.ownerDocument; 
+    var _current = document.currentScript.ownerDocument;
     class nameBadge extends HTMLElement {
       constructor() {
-        
         super();
       }
       load(url) {
@@ -46,15 +43,18 @@
         req.onload = function() {
           if(this.status == 200){
           console.log(_current, this.response);
+
           } else {
             // something went wrong
           }
         }
       }
       connectedCallback() {
-        var importDoc = _current.querySelector('[id=nameTagTemplate]');
+        var importDoc = _current.querySelectorAll('template')[0];//_current.getElementById('contTableTemplate')
         var shadow = this.attachShadow({ mode: "open" });
-        this.load(this.getAttribute('data-load'))
+        this.load(this.getAttribute('data-load'));
+        //importDoc.content.lastElementChild.getElementsByTagName('content')[0].innerText = this.lastChild.data;
+        shadow.appendChild(importDoc.content.cloneNode(true));
       }
     }
     customElements.define("cont-table", nameBadge);
