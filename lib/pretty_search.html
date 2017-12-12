@@ -3,10 +3,11 @@
     <style>
       @import "https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.35/css/uikit.min.css";
       .list {
-        /*width: 100px; height: 100px;*/
-        /*position: absolute;*/
-        /*top:100px; right: 10px;*/
-        /*background: red;*/
+        margin: 0 2px;
+        margin-top: -1rem;
+      }
+      .hide{
+        display: none;
       }
       h1{
         color: blue;
@@ -22,7 +23,7 @@
              </div>
          </div>
       </form>
-      <div class="list"><slot name="mioo"></slot></div>
+      <div class="list hide"><slot name="mioo"></slot></div>
     </content>
   </template>
   <script>
@@ -47,22 +48,35 @@
           }
         }
       }
-      addEvents(elm, evt) {
-        console.log(elm, evt);
+      addEvents(elm, evt, shadow) {
         elm.addEventListener(evt, function(e) {
-          console.log(e.target.value)
+          if(e.target.value.length>0) shadow.querySelectorAll('.list')[0].classList.remove("hide");
+          else shadow.querySelectorAll('.list')[0].classList.add("hide");
         })
       }
+      handle(e) {
+        if(Array.prototype.slice.call(this.shadow.querySelectorAll('.list')[0].classList).indexOf('hide')<0){
+          for(var i=0; i<this.getElementsByTagName('LI').length;i++) {
+            this.getElementsByTagName('LI')[i].classList.remove('vlio');
+          }
+          this.getElementsByTagName('LI')[this.position].classList.add('vlio');
+          if(this.position < this.getElementsByTagName('LI').length-1 && e.keyCode===40) this.position++
+          else if(e.keyCode===38 && this.position>1) this.position--
+        }
+      }
       connectedCallback() {
-        var importDoc = _current.querySelectorAll('template')[0];//_current.getElementById('prettySearchTemplate')
-        var shadow = this.attachShadow({ mode: "open" });
+        this.position = 0;
+        this.importDoc = _current.querySelectorAll('template')[0];//_current.getElementById('prettySearchTemplate')
+        this.shadow = this.attachShadow({ mode: "open" });
         this.load(this.getAttribute('data-load'));
         //importDoc.content.lastElementChild.getElementsByTagName('content')[0].innerText = this.lastChild.data;
-
-        shadow.appendChild(importDoc.content.cloneNode(true));
-        console.log(shadow)
-        this.addEvents(shadow.lastElementChild.getElementsByTagName('INPUT')[0], 'input')
-        // shadow.lastElementChild.getElementsByTagName('INPUT')[0].className=
+        this.shadow.appendChild(this.importDoc.content.cloneNode(true));
+        var kinput = this.shadow.lastElementChild.getElementsByTagName('INPUT')[0]
+        kinput.addEventListener('input', function(e) {
+          if(e.target.value.length>0) this.shadow.querySelectorAll('.list')[0].classList.remove("hide");
+          else this.shadow.querySelectorAll('.list')[0].classList.add("hide");
+        }.bind(this));
+        kinput.onkeydown = this.handle.bind(this);
       }
     }
     customElements.define("pretty-search", nameBadge);
