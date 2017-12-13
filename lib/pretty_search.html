@@ -3,8 +3,8 @@
     <style>
       @import "https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.35/css/uikit.min.css";
       .list {
-        margin: 0 2px;
-        margin-top: -1rem;
+        /*margin: 0 2px;*/
+        margin-top: -1.5rem;
       }
       .hide{
         display: none;
@@ -48,24 +48,21 @@
           }
         }
       }
-      addEvents(elm, evt, shadow) {
-        elm.addEventListener(evt, function(e) {
-          if(e.target.value.length>0) shadow.querySelectorAll('.list')[0].classList.remove("hide");
-          else shadow.querySelectorAll('.list')[0].classList.add("hide");
-        })
-      }
       handle(e) {
         if(Array.prototype.slice.call(this.shadow.querySelectorAll('.list')[0].classList).indexOf('hide')<0){
           for(var i=0; i<this.getElementsByTagName('LI').length;i++) {
-            this.getElementsByTagName('LI')[i].classList.remove('vlio');
+            this.getElementsByTagName('LI')[i].classList.remove('active');
           }
-          this.getElementsByTagName('LI')[this.position].classList.add('vlio');
+
           if(this.position < this.getElementsByTagName('LI').length-1 && e.keyCode===40) this.position++
-          else if(e.keyCode===38 && this.position>1) this.position--
+          else if(e.keyCode===38 && this.position>=0) this.position--;
+          if(this.getElementsByTagName('LI')[this.position]) {
+            this.getElementsByTagName('LI')[this.position].classList.add('active');
+          }
         }
       }
       connectedCallback() {
-        this.position = 0;
+        this.position = -1;
         this.importDoc = _current.querySelectorAll('template')[0];//_current.getElementById('prettySearchTemplate')
         this.shadow = this.attachShadow({ mode: "open" });
         this.load(this.getAttribute('data-load'));

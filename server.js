@@ -5,7 +5,6 @@ const path = require('path');
 // you can pass the parameter in the command line. e.g. node static_server.js 3000
 const port = process.argv[2] || 9006;
 http.createServer(function (req, res) {
-  console.log(`${req.method} ${req.url}`);
   // parse URL
   const parsedUrl = url.parse(req.url);
   // extract URL path
@@ -36,12 +35,9 @@ http.createServer(function (req, res) {
       res.end(`File ${pathname} not found! ${e}`);
       return;
     }
-    // if is a directory, then look for index.html
     if (fs.statSync(pathname).isDirectory()) {
       pathname += '/index-1.html';
     }
-    console.log('p', pathname)
-    // read file from file system
     fs.readFile(pathname, function(err, data){
       if(err){
         res.statusCode = 500;

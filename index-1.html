@@ -3,11 +3,24 @@
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.35/css/uikit.min.css" />
     	<script src="bower_components/webcomponentsjs/webcomponents-lite.js"></script>
       <link rel="import" href="lib/pretty_search.html"></link>
+      <style>
+        .uk-list>li{
+          padding: 10px 5px 10px;
+        }
+        .uk-list>li:nth-child(n+2), .uk-list>li>ul{
+            margin-top: 0;
+            border-top: 1px solid #e5e5e5;
+        }
+        .active{
+          background: blue;
+          color: white;
+        }
+      </style>
     </head>
     <body>
-      
+
     	<pretty-search data-load="demos.json" class="uk-container uk-container-small uk-position-relative">
-        <ul slot="mioo" class="uk-list uk-list-divider">
+        <ul slot="mioo" class="uk-list">
           <li>name</li>
           <li>The name of the slot.</li>
         </ul>
