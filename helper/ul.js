@@ -9,10 +9,10 @@ var ul = function (cont) {
       return cont[position] || false;
     },
     addClass: function (name){
-      cont[this._position].classList.add(name);
+      if(cont[this._position]) cont[this._position].classList.add(name);
     },
     removeClass: function(name){
-      cont[this._position].classList.remove(name);
+      if(cont[this._position]) cont[this._position].classList.remove(name);
     },
     innerHtml: function(){
       return (cont[this._position]) ? cont[this._position].innerHTML : ''
