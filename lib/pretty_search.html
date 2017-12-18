@@ -1,4 +1,7 @@
 <html>
+  <script src="../helper/list.js"></script>
+  <script src="../helper/ul.js"></script>
+  <script src="../helper/keyboard.js"></script>
   <template id="prettySearchTemplate">
     <style>
       @import "https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.35/css/uikit.min.css";
@@ -30,60 +33,6 @@
   </template>
   <script>
     var _current = document.currentScript.ownerDocument;
-    var list = function (el) {
-      return {
-        addClass: function(name) {
-          el.classList.remove(name);
-        },
-        exists: function (elm) {
-          return elm || false;
-        }
-      }
-    };
-    var ul = function (cont) {
-      this._position = 0;
-      return {
-        position: function (position){
-          this._position = position || 0;
-        },
-        exists: function (position) {
-          position = position || this._position;
-          return cont[position] || false;
-        },
-        addClass: function (name){
-          cont[this._position].classList.add(name);
-        },
-        removeClass: function(name){
-          cont[this._position].classList.remove(name);
-        }
-      }
-    } 
-    var keyboard = function (data) {
-      var hasNext = function (current, total){
-        return current < (total || data.length);
-      };
-      var hasPrev = function(current, minium) {
-        return current > minium;
-      };
-      return {
-        iterate: function(from, callback) {
-          from = from || 0;
-          while (hasNext(from)) {
-            callback.call(this, from);
-            from ++;
-          }
-        },
-        next:  function(current) {
-          if(hasNext(current, data.length - 1)) return ++current;
-          return data.length -1;
-        },
-        prev: function(current){
-          if(hasPrev(current, 0)) return --current;
-          return 0;
-        }
-      };
-    };
-    
     class nameBadge extends HTMLElement {
       constructor() {
         super();
@@ -111,11 +60,10 @@
 
       }
       handle(e) {
-        
-        if(Array.prototype.slice.call(this.shadow.querySelectorAll('.list')[0].classList).indexOf('hide')<0)
+        var _list = list(this.shadow.querySelectorAll('.list')[0]);
+        if(!_list.hasClass('hide'))
         {
           var move = keyboard(this.getElementsByTagName('LI'));
-          var _list = list(this.shadow.querySelectorAll('.list')[0]);
           var _ul = ul(this.getElementsByTagName('LI'));
           move.iterate(0, function(i) {
             _ul.position(i);
@@ -128,22 +76,23 @@
           if (e.keyCode === 13) {
             e.preventDefault();
             e.stopPropagation();
-            e.target.value = this.getElementsByTagName('LI')[this.position] ? this.getElementsByTagName('LI')[this.position].innerHTML  : '';
-            _list.add("hide");  
+            e.target.value = _ul.innerHtml();
+            _list.addClass("hide");  
           }
         }
       }
       connectedCallback() {
         this.position = -1;
+        
         this.importDoc = _current.querySelectorAll('template')[0];//_current.getElementById('prettySearchTemplate')
         this.shadow = this.attachShadow({ mode: "open" });
         this.load(this.getAttribute('data-load'));
-        //importDoc.content.lastElementChild.getElementsByTagName('content')[0].innerText = this.lastChild.data;
         this.shadow.appendChild(this.importDoc.content.cloneNode(true));
+        var _list = list(this.shadow.querySelectorAll('.list')[0]);
         var kinput = this.shadow.lastElementChild.getElementsByTagName('INPUT')[0]
         kinput.addEventListener('input', function(e) {
-          if(e.target.value.length>0) this.shadow.querySelectorAll('.list')[0].classList.remove("hide");
-          else this.shadow.querySelectorAll('.list')[0].classList.add("hide");
+          if(e.target.value.length>0) _list.removeClass("hide");
+          else _list.addClass("hide");
         }.bind(this));
         kinput.onkeydown = this.handle.bind(this);
       }
