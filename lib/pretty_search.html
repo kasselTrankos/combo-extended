@@ -30,6 +30,34 @@
   </template>
   <script>
     var _current = document.currentScript.ownerDocument;
+    var list = function (el) {
+      return {
+        addClass: function(name) {
+          el.classList.remove(name);
+        },
+        exists: function (elm) {
+          return elm || false;
+        }
+      }
+    };
+    var ul = function (cont) {
+      this._position = 0;
+      return {
+        position: function (position){
+          this._position = position || 0;
+        },
+        exists: function (position) {
+          position = position || this._position;
+          return cont[position] || false;
+        },
+        addClass: function (name){
+          cont[this._position].classList.add(name);
+        },
+        removeClass: function(name){
+          cont[this._position].classList.remove(name);
+        }
+      }
+    } 
     var keyboard = function (data) {
       var hasNext = function (current, total){
         return current < (total || data.length);
@@ -87,12 +115,22 @@
         if(Array.prototype.slice.call(this.shadow.querySelectorAll('.list')[0].classList).indexOf('hide')<0)
         {
           var move = keyboard(this.getElementsByTagName('LI'));
+          var _list = list(this.shadow.querySelectorAll('.list')[0]);
+          var _ul = ul(this.getElementsByTagName('LI'));
           move.iterate(0, function(i) {
-            this.getElementsByTagName('LI')[i].classList.remove('active');
+            _ul.position(i);
+            _ul.removeClass('active');
           }.bind(this))
-          if (e.keyCode===40) this.position = move.next(this.position);
-          if (e.keyCode===38) this.position = move.prev(this.position);
-          this.getElementsByTagName('LI')[this.position].classList.add('active');
+          if (e.keyCode === 40) this.position = move.next(this.position);
+          if (e.keyCode === 38) this.position = move.prev(this.position);
+          _ul.position(this.position);
+          if (_ul.exists()) _ul.addClass('active');
+          if (e.keyCode === 13) {
+            e.preventDefault();
+            e.stopPropagation();
+            e.target.value = this.getElementsByTagName('LI')[this.position] ? this.getElementsByTagName('LI')[this.position].innerHTML  : '';
+            _list.add("hide");  
+          }
         }
       }
       connectedCallback() {
