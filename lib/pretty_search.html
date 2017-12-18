@@ -34,6 +34,7 @@
   </template>
   <script>
     var _current = document.currentScript.ownerDocument;
+    var _items;
     class nameBadge extends HTMLElement {
       constructor() {
         super();
@@ -58,13 +59,18 @@
           LI.innerHTML = this.data[i].name;
           this.getElementsByTagName('UL')[0].appendChild(LI);
         }
+        var _ul = ul(this.getElementsByTagName('LI'));
+        _items = _ul.items();
+        console.log(_items);
       }
       handle(e) {
         var _list = list(this.shadow.querySelectorAll('.list')[0]);
+        var _ul = ul(this.getElementsByTagName('LI'));
+        
         if(!_list.hasClass('hide'))
         {
           var move = keyboard(this.getElementsByTagName('LI'));
-          var _ul = ul(this.getElementsByTagName('LI'));
+          
           var _scroll = scroll(this.shadow.querySelectorAll('.list')[0]);
           _scroll.height(this.getElementsByTagName('LI')[1]);
           move.iterate(0, function(i) {
@@ -97,7 +103,7 @@
           if(e.target.value.length>0) _list.removeClass("hide");
           else _list.addClass("hide");
         }.bind(this));
-        kinput.onkeydown = this.handle.bind(this);
+        kinput.onkeyup = this.handle.bind(this);
       }
     }
     customElements.define("pretty-search", nameBadge);
