@@ -18,8 +18,8 @@ var keyboard = function (data) {
       return data.length -1;
     },
     prev: function(current){
-      if(hasPrev(current, 0)) return --current;
-      return 0;
+      if(hasPrev(current, -1)) return --current;
+      return -1;
     }
   };
 };

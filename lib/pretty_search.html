@@ -79,15 +79,14 @@
         {
           _ul.redraw(e.target.value, this.data());
           var move = keyboard(this.getElementsByTagName('LI'));
-          var _scroll = scroll(this.shadow.querySelectorAll('.list')[0]);
-          _scroll.height(this.getElementsByTagName('LI')[1]);
+          
           move.iterate(0, function(i) {
             _ul.li(i).removeClass('active');
           }.bind(this))
           if (e.keyCode === 40) this.position = move.next(this.position);
           if (e.keyCode === 38) this.position = move.prev(this.position);
-          _scroll.scrollTo(this.position);
-          _ul.li(this.position).addClass('active');
+          // _scroll.scrollTo(this.position);
+          _ul.li(this.position).addClass('active').scroll(this.shadow.querySelectorAll('.list')[0]);
           if (e.keyCode === 13) {
             e.preventDefault();
             e.stopPropagation();

@@ -1,16 +1,10 @@
 var ul = function (cont) {
-  var _position = 0, _li = null;
+  var _position = 0,
+      _li = null;
   var getLi = function(position) {
     return cont.getElementsByTagName('LI')[position] || false;
-  }
+  };
   return {
-    // items: function() {
-    //   var _items = [];
-    //   for(var i=0; i<cont.length; i++){
-    //     _items.push(cont[i].innerHTML);
-    //   }
-    //   return _items;
-    // },
     redraw: function (value, data) {
       this.clear();
       var regex = new RegExp('^' + value);
@@ -29,9 +23,9 @@ var ul = function (cont) {
         cont.removeChild(cont.firstChild);
       }
     },
-    // parent: function () {
-
-    // },
+    scroll: function (elm) {
+      scroll().scrollTo(elm || cont, _li.offsetHeight * _position);
+    },
     position: function (position){
       _position = position || 0;
       return _position;
@@ -40,14 +34,16 @@ var ul = function (cont) {
       return getLi(position || _position);
     },
     li: function (position) {
-      this._li = getLi(this.position(position));
+      _li = getLi(this.position(position));
       return this;
     },
     addClass: function (name){
-      if(this.exists()) this._li.classList.add(name);
+      if(this.exists()) _li.classList.add(name);
+      return this;
     },
     removeClass: function(name){
-      if(this.exists()) this._li.classList.remove(name);
+      if(this.exists()) _li.classList.remove(name);
+      return this;
     },
     innerHtml: function(){
       return (cont[_position]) ? cont[_position].innerHTML : ''
