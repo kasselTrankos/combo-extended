@@ -13,7 +13,7 @@ var keyboard = function (data) {
         from ++;
       }
     },
-    next:  function(current) {
+    next: function(current) {
       if(hasNext(current, data.length - 1)) return ++current;
       return data.length -1;
     },

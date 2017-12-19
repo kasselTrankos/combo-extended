@@ -1,118 +1,119 @@
 <html>
-  <script src="../helper/list.js"></script>
-  <script src="../helper/listado.js"></script>
-  <script src="../helper/keyboard.js"></script>
-  <script src="../helper/scroll.js"></script>
-  <template id="prettySearchTemplate">
-    <style>
-      @import "https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.35/css/uikit.min.css";
-      .list {
-        /*margin: 0 2px;*/
-        height: 10rem;
-        overflow-y: scroll;
-        margin-top: -20px;
-      }
-      .hide{
-        display: none;
-      }
-      h1{
-        color: blue;
-        font-size: 44px;
-      }
-    </style>
-    <content>
-      <form class="uk-form-stacked">
-        <div class="uk-margin">
-             <label class="uk-form-label" for="form-stacked-text">Text</label>
-             <div class="uk-form-controls">
-                 <input class="uk-input" id="form-stacked-text" type="text" placeholder="Some text..." />
-             </div>
-         </div>
-      </form>
-      <div class="list hide"><slot name="mioo"></slot></div>
-    </content>
-  </template>
-  <script>
-    var _current = document.currentScript.ownerDocument;
-    // var _items = [];
-    class nameBadge extends HTMLElement {
-      constructor() {
-        
-        super();
-        this.items = [];
-      }
-      load(url) {
-        var req = new XMLHttpRequest();
-        req.open('GET', url);
-        req.responseType = 'json';
-        req.send();
-        req.onload = function(response, dat) {
-          if (req.status == 200) {
-            this.fill();
-            this.data(req.response);
-            var _ul = ul(this.getElementsByTagName('UL')[0]);
-            console.log(_ul);
-            _ul.clear();
-          } else {
-            // something went wrong
-          }
-        }.bind(this)
-      }
-      
-      data(value) {
-        if (value) this.items = this.items.concat(value);
-        return this.items;
-      }
-      fill() {
-        for(var i=0; i< this.getElementsByTagName('LI').length; i++) {
-          this.data([{
-            id: 'adlhjfldfj',
-            name: this.getElementsByTagName('LI')[i].innerHTML
-          }]);
+<script src="../helper/list.js"></script>
+<script src="../helper/listado.js"></script>
+<script src="../helper/keyboard.js"></script>
+<script src="../helper/scroll.js"></script>
+<template id="prettySearchTemplate">
+  <style>
+    @import "https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.35/css/uikit.min.css";
+    .list {
+      height: 10rem;
+      overflow-y: hidden;
+      margin-top: -20px;
+    }
+    .hide {
+      display: none;
+    }
+
+    h1 {
+      color: blue;
+      font-size: 44px;
+    }
+  </style>
+  <content>
+    <form class="uk-form-stacked">
+      <div class="uk-margin">
+        <label class="uk-form-label" for="form-stacked-text">Text</label>
+        <div class="uk-form-controls">
+          <input class="uk-input" id="form-stacked-text" type="text" placeholder="Some text..." />
+        </div>
+      </div>
+    </form>
+    <div class="list hide">
+      <slot name="mioo"></slot>
+    </div>
+  </content>
+</template>
+<script>
+  var _current = document.currentScript.ownerDocument;
+  // var _items = [];
+  class nameBadge extends HTMLElement {
+    constructor() {
+
+      super();
+      this.ul = ul(this.getElementsByTagName('UL')[0]);
+      this.items = [];
+    }
+    load(url) {
+      var req = new XMLHttpRequest();
+      req.open('GET', url);
+      req.responseType = 'json';
+      req.send();
+      req.onload = function (response, dat) {
+        if (req.status == 200) {
+          this.fill();
+          this.data(req.response);
+          var _ul = ul(this.getElementsByTagName('UL')[0]);
+          console.log(_ul);
+          _ul.clear();
+        } else {
+          // something went wrong
         }
-      }
-      handle(e) {
-        var _list = list(this.shadow.querySelectorAll('.list')[0]);
-        var _ul = ul(this.getElementsByTagName('UL')[0]);
-        
-        if(!_list.hasClass('hide'))
-        {
-          _ul.redraw(e.target.value, this.data());
-          var move = keyboard(this.getElementsByTagName('LI'));
-          
-          move.iterate(0, function(i) {
-            _ul.li(i).removeClass('active');
-          }.bind(this))
-          if (e.keyCode === 40) this.position = move.next(this.position);
-          if (e.keyCode === 38) this.position = move.prev(this.position);
-          // _scroll.scrollTo(this.position);
-          _ul.li(this.position).addClass('active').scroll(this.shadow.querySelectorAll('.list')[0]);
-          if (e.keyCode === 13) {
-            e.preventDefault();
-            e.stopPropagation();
-            e.target.value = _ul.innerHtml();
-            _list.addClass('hide');  
-          }
-        }
-      }
-      connectedCallback() {
-        this.position = -1;
-        
-        this.importDoc = _current.querySelectorAll('template')[0];//_current.getElementById('prettySearchTemplate')
-        this.shadow = this.attachShadow({ mode: "open" });
-        this.load(this.getAttribute('data-load'));
-        this.shadow.appendChild(this.importDoc.content.cloneNode(true));
-        var _list = list(this.shadow.querySelectorAll('.list')[0]);
-        var kinput = this.shadow.lastElementChild.getElementsByTagName('INPUT')[0];
-        var _ul = ul(this.getElementsByTagName('UL')[0]);
-        kinput.addEventListener('focus', function(e) {
-          console.log(2222);
-          _ul.redraw(e.target.value, this.data());
-          _list.removeClass("hide");
-        }.bind(this));
-        kinput.onkeyup = this.handle.bind(this);
+      }.bind(this)
+    }
+    
+    data(value) {
+      if (value) this.items = this.items.concat(value);
+      return this.items;
+    }
+    fill() {
+      for (var i = 0; i < this.getElementsByTagName('LI').length; i++) {
+        this.data([{
+          id: 'adlhjfldfj',
+          name: this.getElementsByTagName('LI')[i].innerHTML
+        }]);
       }
     }
-    customElements.define("pretty-search", nameBadge);
-  </script>
+    handle(e) {
+      var _list = list(this.shadow.querySelectorAll('.list')[0]);
+      if (!_list.hasClass('hide')) {
+        this.ul.redraw(e.target.value, this.data());
+        var move = keyboard(this.getElementsByTagName('LI'));
+
+        move.iterate(0, function (i) {
+          this.ul.child(i).removeClass('active');
+        }.bind(this))
+        if (e.keyCode === 40) this.position = move.next(this.position);
+        if (e.keyCode === 38) this.position = move.prev(this.position);
+        this.ul.child(this.position).addClass('active');
+        scroll(this.shadow.querySelectorAll('.list')[0]).scrollTo((this.ul.li().offsetHeight + 1) * this.position);
+      }
+    }
+    connectedCallback() {
+      this.position = -1;
+
+      this.importDoc = _current.querySelectorAll('template')[0];//_current.getElementById('prettySearchTemplate')
+      this.shadow = this.attachShadow({ mode: "open" });
+      this.load(this.getAttribute('data-load'));
+      this.shadow.appendChild(this.importDoc.content.cloneNode(true));
+      var _list = list(this.shadow.querySelectorAll('.list')[0]);
+      var kinput = this.shadow.lastElementChild.getElementsByTagName('INPUT')[0];
+      kinput.addEventListener('focus', function (e) {
+        this.ul.redraw(e.target.value, this.data());
+        _list.removeClass("hide");
+      }.bind(this));
+      kinput.onkeyup = this.handle.bind(this);
+      kinput.onkeydown = function(e) {
+        if (e.keyCode === 13 && !_list.hasClass('hide')) {
+          e.preventDefault();
+          e.stopPropagation();
+          e.target.value = this.ul.li().innerHTML;
+          _list.addClass('hide');
+        }
+      }.bind(this);
+    }
+  }
+  customElements.define("pretty-search", nameBadge);
+</script>
+
 </html>

@@ -18,13 +18,11 @@ var ul = function (cont) {
         cont.appendChild(LI);
       }
     },
+    
     clear: function () {
       while (cont.firstChild) {
         cont.removeChild(cont.firstChild);
       }
-    },
-    scroll: function (elm) {
-      scroll().scrollTo(elm || cont, _li.offsetHeight * _position);
     },
     position: function (position){
       _position = position || 0;
@@ -33,9 +31,16 @@ var ul = function (cont) {
     exists: function (position) {
       return getLi(position || _position);
     },
-    li: function (position) {
+    child: function (position) {
       _li = getLi(this.position(position));
       return this;
+    },
+    li: function (position) {
+      this.child(position);
+      return _li;
+    },
+    height: function() {
+      return _li.offsetHeight;
     },
     addClass: function (name){
       if(this.exists()) _li.classList.add(name);

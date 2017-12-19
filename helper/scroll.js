@@ -1,6 +1,6 @@
 var scroll = function (elm) {
   return {
-    scrollTo: function (elm, position) {
+    scrollTo: function (position) {
       elm.scrollTop = position;
     }
 }
