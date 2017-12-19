@@ -39,7 +39,6 @@
   // var _items = [];
   class nameBadge extends HTMLElement {
     constructor() {
-
       super();
       this.ul = ul(this.getElementsByTagName('UL')[0]);
       this.items = [];
@@ -79,10 +78,9 @@
       if (!_list.hasClass('hide')) {
         this.ul.redraw(e.target.value, this.data());
         var move = keyboard(this.getElementsByTagName('LI'));
-
         move.iterate(0, function (i) {
           this.ul.child(i).removeClass('active');
-        }.bind(this))
+        }.bind(this));
         if (e.keyCode === 40) this.position = move.next(this.position);
         if (e.keyCode === 38) this.position = move.prev(this.position);
         this.ul.child(this.position).addClass('active');

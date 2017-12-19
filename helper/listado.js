@@ -25,7 +25,7 @@ var ul = function (cont) {
       }
     },
     position: function (position){
-      _position = position || 0;
+      _position = (position || position===0) ? position : _position;
       return _position;
     },
     exists: function (position) {
