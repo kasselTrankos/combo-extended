@@ -1,6 +1,6 @@
 <html>
   <script src="../helper/list.js"></script>
-  <script src="../helper/ul.js"></script>
+  <script src="../helper/listado.js"></script>
   <script src="../helper/keyboard.js"></script>
   <script src="../helper/scroll.js"></script>
   <template id="prettySearchTemplate">
@@ -34,10 +34,12 @@
   </template>
   <script>
     var _current = document.currentScript.ownerDocument;
-    var _items;
+    // var _items = [];
     class nameBadge extends HTMLElement {
       constructor() {
+        
         super();
+        this.items = [];
       }
       load(url) {
         var req = new XMLHttpRequest();
@@ -45,43 +47,46 @@
         req.responseType = 'json';
         req.send();
         req.onload = function(response, dat) {
-          if(req.status == 200){
-            this.data = req.response;
-            this.fill()
+          if (req.status == 200) {
+            this.fill();
+            this.data(req.response);
+            var _ul = ul(this.getElementsByTagName('UL')[0]);
+            console.log(_ul);
+            _ul.clear();
           } else {
             // something went wrong
           }
         }.bind(this)
       }
+      data(value) {
+        if (value) this.items = this.items.concat(value);
+        return this.items;
+      }
       fill() {
-        for(var i=0; i< this.data.length; i++) {
-          var LI = document.createElement('LI');
-          LI.innerHTML = this.data[i].name;
-          this.getElementsByTagName('UL')[0].appendChild(LI);
+        for(var i=0; i< this.getElementsByTagName('LI').length; i++) {
+          this.data([{
+            id: 'adlhjfldfj',
+            name: this.getElementsByTagName('LI')[i].innerHTML
+          }]);
         }
-        var _ul = ul(this.getElementsByTagName('LI'));
-        _items = _ul.items();
-        console.log(_items);
       }
       handle(e) {
         var _list = list(this.shadow.querySelectorAll('.list')[0]);
-        var _ul = ul(this.getElementsByTagName('LI'));
+        var _ul = ul(this.getElementsByTagName('UL')[0]);
         
         if(!_list.hasClass('hide'))
         {
+          _ul.redraw(e.target.value, this.data());
           var move = keyboard(this.getElementsByTagName('LI'));
-          
           var _scroll = scroll(this.shadow.querySelectorAll('.list')[0]);
           _scroll.height(this.getElementsByTagName('LI')[1]);
           move.iterate(0, function(i) {
-            _ul.position(i);
-            _ul.removeClass('active');
+            _ul.li(i).removeClass('active');
           }.bind(this))
           if (e.keyCode === 40) this.position = move.next(this.position);
           if (e.keyCode === 38) this.position = move.prev(this.position);
-          _ul.position(this.position);
           _scroll.scrollTo(this.position);
-          _ul.addClass('active');
+          _ul.li(this.position).addClass('active');
           if (e.keyCode === 13) {
             e.preventDefault();
             e.stopPropagation();
